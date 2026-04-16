@@ -1,0 +1,14 @@
+node_modules/
+out/
+release/
+.DS_Store
+*.log
+.secrets.local
+.env.signing
+certs/
+*.p12
+*.cer
+*.key
+*.csr
+screenshots/
+CREDENTIALS.md

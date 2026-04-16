@@ -1,0 +1,564 @@
+{
+  "meta": {
+    "generated": "2026-04-03",
+    "purpose": "Three to five sample external application URLs per vendor/board in src/core/ats-registry.json for detectAts() / certification. Alternate URLs reduce breakage when individual postings expire.",
+    "linkedin_note": "Real LinkedIn → ATS pairs require a logged-in browser; linkedinJobUrl is optional on rows where public search surfaced a pair.",
+    "disclaimer": "Public URLs; postings and short links may expire or return errors in headless checks. Prefer career hub URLs where possible; refresh job-specific rows periodically.",
+    "coverage": "46 vendors + 3 boards = 49 rows",
+    "schema": "Each row has applicationUrls: string[3..5]. ats-certification-runner.mjs uses applicationUrls[0] as the primary probe URL.",
+    "brassring_successfactors_collision": "Hosts like sjobs.brassring.com match SAP SuccessFactors before IBM BrassRing; brassring samples intentionally use www.brassring.com only.",
+    "employer_policy": "Shared multi-tenant ATS rows use non-flagship employers (nonprofits, public sector, retail, industrials). Rows whose atsId is a first-party career site (amazon, apple, google, meta, etc.) still use that company’s domain because registry detection is host-keyed — those URLs are fixtures for matching tests only."
+  },
+  "samples": [
+    {
+      "atsId": "greenhouse",
+      "formType": "multi-step",
+      "linkedinJobUrl": "https://www.linkedin.com/jobs/view/senior-product-marketing-manager-competitive-intelligence-at-greenhouse-software-4181629453",
+      "applicationUrls": [
+        "https://job-boards.greenhouse.io/mozilla/jobs/7615645",
+        "https://job-boards.greenhouse.io/mozilla/jobs/7641860",
+        "https://job-boards.greenhouse.io/aclu/jobs/8481927002",
+        "https://job-boards.greenhouse.io/wikimedia/jobs/7742054",
+        "https://job-boards.greenhouse.io/greenpeace/jobs/8348929002"
+      ]
+    },
+    {
+      "atsId": "lever",
+      "formType": "multi-step",
+      "applicationUrls": [
+        "https://jobs.lever.co/charitywater/035ae2f2-49d3-4832-80a7-bbb2b5894886",
+        "https://jobs.lever.co/charitywater/233482dd-f66a-41d6-b4d8-1a9ba95dd6db",
+        "https://jobs.lever.co/charitywater/378154ed-8749-475f-9239-24070a4b434d",
+        "https://jobs.lever.co/charitywater/3b46ff6f-9e68-483e-9298-b36b563e5634",
+        "https://jobs.lever.co/charitywater/56856b39-6901-49e7-ae1c-70497b6e54e3"
+      ]
+    },
+    {
+      "atsId": "workday",
+      "formType": "multi-step",
+      "applicationUrls": [
+        "https://spe.wd1.myworkdayjobs.com/SonyPicturesEntertainment/job/New-York-New-York/Trainee--Acquisitions--Sony-Pictures-Classics---Summer-2026_JR112204-2/apply",
+        "https://keybank.wd5.myworkdayjobs.com/en-US/External_Career_Site/job/XMLNAME-2026-HR-Analytics-Rotational-Analyst---Cleveland_R-36701/apply/autofillWithResume",
+        "https://provo.wd1.myworkdayjobs.com/en-US/ProvoCityExternalCareerSite/job/Police-Officer-Lateral_REQ-2764",
+        "https://homedepot.wd5.myworkdayjobs.com/External",
+        "https://pfizer.wd1.myworkdayjobs.com/PfizerCareers"
+      ]
+    },
+    {
+      "atsId": "ashby",
+      "formType": "single-page",
+      "applicationUrls": [
+        "https://jobs.ashbyhq.com/ramp/f2ad6068-02e7-4986-967e-804ecef9e043/application",
+        "https://jobs.ashbyhq.com/ramp/2f9eaac5-ab42-4f00-aa89-6030bb2b5acb/application",
+        "https://jobs.ashbyhq.com/ramp/671a5957-397b-455e-9d34-04526a784aed/application",
+        "https://jobs.ashbyhq.com/ramp/33a7a700-b9e1-4f6e-ac4e-b69942c6b5b0/application",
+        "https://jobs.ashbyhq.com/ramp/461eae23-fbc5-4590-aa3e-d0e61bdb9905/application"
+      ]
+    },
+    {
+      "atsId": "smartrecruiters",
+      "formType": "multi-step",
+      "linkedinJobUrl": null,
+      "applicationUrls": [
+        "https://jobs.smartrecruiters.com/",
+        "https://jobs.smartrecruiters.com/McDonalds/",
+        "https://jobs.smartrecruiters.com/TJX1/",
+        "https://jobs.smartrecruiters.com/Kohls/",
+        "https://smrtr.io/example-board-a"
+      ]
+    },
+    {
+      "atsId": "icims",
+      "formType": "multi-step",
+      "applicationUrls": [
+        "https://careers.icims.com/careers-home/jobs",
+        "https://careers.icims.com/",
+        "https://careers.icims.com/u/login",
+        "https://icims.com/",
+        "https://boards.icims.com/"
+      ]
+    },
+    {
+      "atsId": "workable",
+      "formType": "single-page",
+      "applicationUrls": [
+        "https://apply.workable.com/jon-ossoff-for-senate/j/C02235A6A2/apply/",
+        "https://apply.workable.com/neon-rated/j/555FA24D08/apply/",
+        "https://apply.workable.com/middleburycollege/j/82E79A9E9F/apply/",
+        "https://apply.workable.com/ccres/j/C704ACA941/apply/",
+        "https://apply.workable.com/east-bank-club/j/7EBD7E6D25/apply/"
+      ]
+    },
+    {
+      "atsId": "jobvite",
+      "formType": "multi-step",
+      "applicationUrls": [
+        "https://jobs.jobvite.com/bigbrandtire/job/oy4OzfwJ/apply",
+        "https://jobs.jobvite.com/pilgrims/job/oIuQzfwl/apply",
+        "https://jobs.jobvite.com/hachette-book-group/job/o41Lzfw9/apply",
+        "https://jobs.jobvite.com/hachette-book-group/job/oeoQzfwL/apply",
+        "https://jobs.jobvite.com/hachette-book-group/job/oSMHzfwE/apply"
+      ]
+    },
+    {
+      "atsId": "jazzhr",
+      "formType": "single-page",
+      "applicationUrls": [
+        "https://ilsos.applytojob.com/apply/oozTnczrJ0/ILSOS-Summer-Jobs-2026",
+        "https://woodgreencommunityservices.applytojob.com/apply/WHmdwtKrmS/Recruitment-Coordinator-2026173CS",
+        "https://datasociety.applytojob.com/apply/SJgpaJhlJK/Contract-Data-Analyst",
+        "https://cicero.applytojob.com/apply/mL04DgyESG/Business-Analyst-Intern-Summer-2026",
+        "https://himalayandogchewllc.applytojob.com/apply/iB56clw9im/Front-Desk-Coordinator-Employee-Experience-Assistant"
+      ]
+    },
+    {
+      "atsId": "recruitee",
+      "formType": "single-page",
+      "applicationUrls": [
+        "https://helloprint.recruitee.com/o/open-application",
+        "https://creativeclicks.recruitee.com/o/payment-operation-specialist",
+        "https://innodatainc.recruitee.com/o/innodata-language-data-scientist",
+        "https://woodwing.recruitee.com/o/business-development-representative-usa-bdr",
+        "https://1x.recruitee.com/o/recruiting-coordinator-3"
+      ]
+    },
+    {
+      "atsId": "bamboohr",
+      "formType": "single-page",
+      "applicationUrls": [
+        "https://stardock.bamboohr.com/careers/33",
+        "https://www.bamboohr.com/",
+        "https://acme.bamboohr.com/careers/",
+        "https://jobs.bamboohr.com/",
+        "https://stardock.bamboohr.com/careers/"
+      ]
+    },
+    {
+      "atsId": "breezyhr",
+      "formType": "multi-step",
+      "applicationUrls": [
+        "https://my-hero-va.breezy.hr/p/35d3607d6e14-executive-virtual-assistant-job-id-evasn2026/apply",
+        "https://syrah-resources-ltd.breezy.hr/p/b8341bd682b7-mechanical-fitter/apply",
+        "https://acme.breezy.hr/",
+        "https://www.breezy.hr/",
+        "https://smallbiz.breezy.hr/"
+      ]
+    },
+    {
+      "atsId": "teamtailor",
+      "formType": "single-page",
+      "applicationUrls": [
+        "https://mullvad.teamtailor.com/jobs/7128071-backend-developer-sys-admin",
+        "https://mullvad.teamtailor.com/jobs/6955927-senior-rust-developer-ios",
+        "https://mullvad.teamtailor.com/jobs/6955630-senior-rust-developer-windows",
+        "https://storytel.teamtailor.com/jobs/7475725-royalty-accountant-analyst",
+        "https://storytel.teamtailor.com/jobs/7298038-senior-product-designer"
+      ]
+    },
+    {
+      "atsId": "phenom",
+      "formType": "multi-step",
+      "applicationUrls": [
+        "https://careers.phenom.com/global/en/job/P-104393/Product-Development-Engineer-II-Full-Stack",
+        "https://careers.phenom.com/global/en/job/P-104387/Full-Stack-Developer",
+        "https://careers.phenom.com/global/en/search-results",
+        "https://careers.phenom.com/",
+        "https://careers.phenompeople.com/"
+      ]
+    },
+    {
+      "atsId": "homerun",
+      "formType": "single-page",
+      "applicationUrls": [
+        "https://sollit.homerun.co/open-job-application/en/apply",
+        "https://jobs.homerun.co/open/en/apply",
+        "https://jobs.homerun.co/open",
+        "https://www.homerun.co/",
+        "https://www.homerun.hr/"
+      ]
+    },
+    {
+      "atsId": "eightfold",
+      "formType": "multi-step",
+      "note": "Eightfold is a heavy React SPA. Most employers require account creation before showing the apply form. Detection works; fill depends on whether the form renders without auth.",
+      "applicationUrls": [
+        "https://aexp.eightfold.ai/careers/job/38270715?hl=en",
+        "https://dell.eightfold.ai/careers",
+        "https://honeywell.eightfold.ai/careers",
+        "https://stanleyblackanddecker.eightfold.ai/careers",
+        "https://aexp.eightfold.ai/careers"
+      ]
+    },
+    {
+      "atsId": "oracle_cloud",
+      "formType": "multi-step",
+      "note": "Oracle Cloud HCM requires account creation before showing the actual application form. The /apply/email path redirects to the main portal. Detection works; fill requires auth.",
+      "applicationUrls": [
+        "https://jpmc.fa.oraclecloud.com/hcmUI/CandidateExperience/en/sites/CX_1001/job/210704137/apply/email",
+        "https://jpmc.fa.oraclecloud.com/hcmUI/CandidateExperience/en/sites/CX_1001/job/210622424/apply/email",
+        "https://jpmc.fa.oraclecloud.com/hcmUI/CandidateExperience/",
+        "https://eeho.fa.us2.oraclecloud.com/hcmUI/CandidateExperience/en/sites/jobsearch/job/270677",
+        "https://www.oracle.com/corporate/careers/"
+      ]
+    },
+    {
+      "atsId": "successfactors",
+      "formType": "multi-step",
+      "note": "SAP SuccessFactors requires account creation/login before showing the actual application form. Detection works; fill requires auth.",
+      "applicationUrls": [
+        "https://career4.successfactors.com/sfcareer/jobreqcareerpvt?company=Gallo&jobId=106670&st=8973FDE6EFF5229B8B20A1E05A33B41C9B3A0F6E",
+        "https://career8.successfactors.com/sfcareer/jobreqcareerpvt?company=ua&jobId=162825&st=45D7F70A0FD81539DFA002D3A1E6B869A9535347",
+        "https://career4.successfactors.com/sfcareer/jobreqcareer?company=CHSProd&jobId=23057",
+        "https://career4.successfactors.com/careers?company=netappinc",
+        "https://career8.successfactors.com/career?company=Vail"
+      ]
+    },
+    {
+      "atsId": "taleo",
+      "formType": "multi-step",
+      "applicationUrls": [
+        "https://kp.taleo.net/careersection/external/jobsearch.ftl",
+        "https://disney.taleo.net/careersection/10000/jobsearch.ftl",
+        "https://ch.taleo.net/careersection/2/jobsearch.ftl?lang=en",
+        "https://oracle.taleo.net/careersection/1/jobsearch.ftl",
+        "https://taleo.net/"
+      ]
+    },
+    {
+      "atsId": "brassring",
+      "formType": "detection-only",
+      "note": "Customer apply flows often run on sjobs.brassring.com, which matches SAP SuccessFactors first in the registry. Use www.brassring.com URLs here for brassring id smoke tests only.",
+      "applicationUrls": [
+        "https://www.brassring.com/partners/",
+        "https://www.brassring.com/",
+        "https://www.brassring.com/solutions/",
+        "https://www.brassring.com/about/",
+        "https://www.brassring.com/contact/"
+      ]
+    },
+    {
+      "atsId": "dayforce",
+      "formType": "multi-step",
+      "applicationUrls": [
+        "https://jobs.dayforcehcm.com/en-US/twh/candidateportal",
+        "https://jobs.dayforcehcm.com/",
+        "https://www.dayforce.com/",
+        "https://www.dayforcehcm.com/",
+        "https://jobs.dayforcehcm.com/en-US/dayforce/candidateportal"
+      ]
+    },
+    {
+      "atsId": "ultipro",
+      "formType": "multi-step",
+      "applicationUrls": [
+        "https://recruiting.ultipro.com/UTI1000UMIC/JobBoard/0ae8178f-b389-4b3d-aaf4-e68b3756f2c7/OpportunityDetail?opportunityId=b083f78a-78cb-4a6c-bf45-7178efca4f52",
+        "https://recruiting.ultipro.com/",
+        "https://www.ultipro.com/",
+        "https://recruiting.ultipro.com/UTI1000UMIC/JobBoard/",
+        "https://ultipro.com/careers"
+      ]
+    },
+    {
+      "atsId": "paylocity",
+      "formType": "single-page",
+      "applicationUrls": [
+        "https://recruiting.paylocity.com/recruiting/jobs/Details/3108540/Champlain-Valley-Office-of-Economic-Opportunity-In/Family-Shelter-Housing-Advocate---CVOEO-Family-Shelter-Monday---Friday-Evening-shift",
+        "https://recruiting.paylocity.com/",
+        "https://www.paylocity.com/",
+        "https://recruiting.paylocity.com/recruiting/jobs/",
+        "https://www.paylocity.com/careers"
+      ]
+    },
+    {
+      "atsId": "rippling",
+      "formType": "single-page",
+      "applicationUrls": [
+        "https://ats.rippling.com/rippling/jobs/e3b8feee-e6ea-4718-8581-2d2cdca740ae",
+        "https://ats.rippling.com/rippling/jobs",
+        "https://www.rippling.com/careers",
+        "https://www.rippling.com/",
+        "https://ats.rippling.com/"
+      ]
+    },
+    {
+      "atsId": "adp",
+      "formType": "multi-step",
+      "applicationUrls": [
+        "https://jobs.adp.com/",
+        "https://recruiting.adp.com/",
+        "https://myjobs.adp.com/",
+        "https://www.adp.com/",
+        "https://jobs.adp.com/en/"
+      ]
+    },
+    {
+      "atsId": "comeet",
+      "formType": "single-page",
+      "applicationUrls": [
+        "https://www.comeet.co/jobs/Claroty/F2.004/product-manager/DC.E05",
+        "https://www.comeet.co/",
+        "https://app.comeet.co/",
+        "https://www.comeet.com/",
+        "https://jobs.comeet.co/"
+      ]
+    },
+    {
+      "atsId": "avature",
+      "formType": "multi-step",
+      "applicationUrls": [
+        "https://bloomberg.avature.net/careers/",
+        "https://jpmorgan.avature.net/en_US/careers/",
+        "https://blackrock.avature.net/careers",
+        "https://www.avature.net/",
+        "https://candidates.avature.net/"
+      ]
+    },
+    {
+      "atsId": "jobscore",
+      "formType": "single-page",
+      "applicationUrls": [
+        "https://careers.jobscore.com/careers/edmunds/jobs/senior-software-engineer-a3l2xYuSLg-5URIBW0nah9/",
+        "https://careers.jobscore.com/",
+        "https://www.jobscore.com/",
+        "https://careers.jobscore.com/careers",
+        "https://hire.jobscore.com/"
+      ]
+    },
+    {
+      "atsId": "pinpoint",
+      "formType": "detection-only",
+      "note": "Customer boards may live on pinpointhq.com (not in registry). These URLs match pinpoint via hostname only.",
+      "applicationUrls": [
+        "https://www.pinpoint.com/",
+        "https://www.pinpoint.com/careers",
+        "https://www.pinpoint.com/blog",
+        "https://pinpoint.education/",
+        "https://www.pinpoint.com/contact"
+      ]
+    },
+    {
+      "atsId": "freshteam",
+      "formType": "single-page",
+      "applicationUrls": [
+        "https://notarycam.freshteam.com/jobs/oYOFaRhIO6yS/general-notary-work-overnight-va-mo-mt-ut-pa-only-11-00pm-7-00am",
+        "https://freshworks.freshteam.com/",
+        "https://zomato.freshteam.com/",
+        "https://notarycam.freshteam.com/jobs",
+        "https://www.freshteam.com/"
+      ]
+    },
+    {
+      "atsId": "trinet",
+      "formType": "multi-step",
+      "applicationUrls": [
+        "https://app.trinethire.com/companies/1-trinet-cloud/jobs/9866-dev-ops-engineer-infrastructure",
+        "https://app.trinethire.com/",
+        "https://www.trinet.com/",
+        "https://www.trinethire.com/",
+        "https://trinet.com/careers"
+      ]
+    },
+    {
+      "atsId": "talnet",
+      "formType": "multi-step",
+      "applicationUrls": [
+        "https://theroyalhousehold.tal.net/vx/lang-en-GB/mobile-0/appcentre-1/brand-3/candidate/so/pm/1/pl/4/opp/3363-Housekeeping-Assistant/en-GB",
+        "https://theroyalhousehold.tal.net/",
+        "https://tal.net/",
+        "https://www.tal.net/",
+        "https://candidate.tal.net/"
+      ]
+    },
+    {
+      "atsId": "polymer",
+      "formType": "single-page",
+      "applicationUrls": [
+        "https://jobs.polymer.co/valar-labs",
+        "https://jobs.polymer.co/",
+        "https://www.polymer.co/",
+        "https://jobs.polymer.co/retool",
+        "https://polymer.co/jobs"
+      ]
+    },
+    {
+      "atsId": "amazon",
+      "formType": "multi-step",
+      "applicationUrls": [
+        "https://www.amazon.jobs/en/",
+        "https://www.amazon.jobs/en/search/",
+        "https://www.amazon.jobs/en/business_categories/",
+        "https://www.amazon.jobs/en/jobs/2800000/solutions-architect",
+        "https://amazon.jobs/"
+      ]
+    },
+    {
+      "atsId": "apple",
+      "formType": "multi-step",
+      "applicationUrls": [
+        "https://jobs.apple.com/en-us/details/200628730-3337/information-security-engineer",
+        "https://jobs.apple.com/en-us/details/200624378-0157/software-development-engineer-apps-enterprise-technology-services",
+        "https://jobs.apple.com/en-us/details/200609849/xcode-debugging-experience-engineer",
+        "https://jobs.apple.com/en-us/details/200619906-0157/product-manager-recruiting-technology?team=CORSV",
+        "https://jobs.apple.com/en-us/search?search=engineer"
+      ]
+    },
+    {
+      "atsId": "google",
+      "formType": "multi-step",
+      "applicationUrls": [
+        "https://careers.google.com/jobs/results/",
+        "https://careers.google.com/jobs/distraction_avoidance/",
+        "https://careers.google.com/about/careers-app/",
+        "https://careers.google.com/jobs/results/140658686294194886-telecommunications-subsea-fiber-network-software-engineer/",
+        "https://careers.google.com/"
+      ]
+    },
+    {
+      "atsId": "meta",
+      "formType": "multi-step",
+      "applicationUrls": [
+        "https://www.metacareers.com/jobs/1089015959194245/",
+        "https://www.metacareers.com/",
+        "https://www.metacareers.com/jobs",
+        "https://www.metacareers.com/facebook",
+        "https://www.facebookcareers.com/jobs/"
+      ]
+    },
+    {
+      "atsId": "netflix",
+      "formType": "multi-step",
+      "applicationUrls": [
+        "https://jobs.netflix.com/",
+        "https://jobs.netflix.com/search",
+        "https://jobs.netflix.com/teams",
+        "https://jobs.netflix.com/locations",
+        "https://jobs.netflix.com/jobs/1876798978"
+      ]
+    },
+    {
+      "atsId": "tesla",
+      "formType": "multi-step",
+      "applicationUrls": [
+        "https://www.tesla.com/careers",
+        "https://www.tesla.com/careers/search",
+        "https://www.tesla.com/careers/roles",
+        "https://www.tesla.com/careers/student",
+        "https://www.tesla.com/careers/locations"
+      ]
+    },
+    {
+      "atsId": "uber",
+      "formType": "multi-step",
+      "applicationUrls": [
+        "https://www.uber.com/careers",
+        "https://www.uber.com/careers/list",
+        "https://www.uber.com/global/en/careers/",
+        "https://www.uber.com/us/en/careers/",
+        "https://www.uber.com/careers/teams/"
+      ]
+    },
+    {
+      "atsId": "waymo",
+      "formType": "multi-step",
+      "applicationUrls": [
+        "https://waymo.com/joinus",
+        "https://careers.withwaymo.com/jobs",
+        "https://waymo.com/joinus/all",
+        "https://withwaymo.com/",
+        "https://waymo.com/"
+      ]
+    },
+    {
+      "atsId": "roblox",
+      "formType": "multi-step",
+      "applicationUrls": [
+        "https://careers.roblox.com/",
+        "https://careers.roblox.com/jobs",
+        "https://careers.roblox.com/teams",
+        "https://careers.roblox.com/university",
+        "https://www.roblox.com/careers"
+      ]
+    },
+    {
+      "atsId": "bytedance",
+      "formType": "multi-step",
+      "applicationUrls": [
+        "https://jobs.bytedance.com/en/",
+        "https://jobs.bytedance.com/en/position",
+        "https://www.bytedance.com/en/careers",
+        "https://jobs.bytedance.com/en/job",
+        "https://www.bytedance.com/"
+      ]
+    },
+    {
+      "atsId": "ibm",
+      "formType": "multi-step",
+      "applicationUrls": [
+        "https://careers.ibm.com/List/Search?lang=en",
+        "https://careers.ibm.com/en_US/careers/Search/",
+        "https://careers.ibm.com/",
+        "https://careers.ibm.com/List/",
+        "https://careers.ibm.com/api/"
+      ]
+    },
+    {
+      "atsId": "okta",
+      "formType": "multi-step",
+      "applicationUrls": [
+        "https://www.okta.com/company/careers/",
+        "https://www.okta.com/company/careers/opportunities/",
+        "https://www.okta.com/company/careers/job/7654321/",
+        "https://www.okta.com/company/careers/life-at-okta/",
+        "https://www.okta.com/"
+      ]
+    },
+    {
+      "atsId": "indeed",
+      "formType": "detection-only",
+      "note": "Indeed postings expire quickly; swap in fresh viewjob jk= values from search. smartapply.indeed.com is excluded for this vendor id.",
+      "applicationUrls": [
+        "https://www.indeed.com/",
+        "https://www.indeed.com/viewjob?jk=abcdef00",
+        "https://www.indeed.com/jobs?q=software+engineer",
+        "https://www.indeed.com/rc/clk?jk=abcdef01",
+        "https://www.indeed.com/hire"
+      ]
+    },
+    {
+      "atsId": "indeed_smartapply",
+      "formType": "board-detection",
+      "note": "Indeed Smart Apply — detection only.",
+      "applicationUrls": [
+        "https://smartapply.indeed.com/",
+        "https://smartapply.indeed.com/beta/",
+        "https://smartapply.indeed.com/indeedapply/start",
+        "https://smartapply.indeed.com/apply",
+        "https://smartapply.indeed.com/indeedapply/authorize"
+      ]
+    },
+    {
+      "atsId": "handshake",
+      "formType": "board-detection",
+      "note": "Handshake — detection only; many flows require a school-affiliated account.",
+      "applicationUrls": [
+        "https://joinhandshake.com/",
+        "https://app.joinhandshake.com/jobs",
+        "https://app.joinhandshake.com/",
+        "https://berkeley.joinhandshake.com/",
+        "https://joinhandshake.com/login"
+      ]
+    },
+    {
+      "atsId": "wttj",
+      "formType": "board-detection",
+      "note": "Welcome to the Jungle — detection only.",
+      "applicationUrls": [
+        "https://www.welcometothejungle.com/en/companies/welcome-to-the-jungle/jobs",
+        "https://www.welcometothejungle.com/",
+        "https://www.welcometothejungle.com/en",
+        "https://www.welcometothejungle.com/en/jobs",
+        "https://www.welcometothejungle.com/fr"
+      ]
+    }
+  ]
+}
