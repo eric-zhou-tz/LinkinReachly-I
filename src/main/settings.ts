@@ -135,7 +135,7 @@ const defaultSettings: AppSettings = {
   seenOnboarding: false,
   bridgePort: defaultBridgePortForPackaging(app?.isPackaged ?? false),
   llmProvider: 'grok',
-  llmBaseUrl: 'http://api.linkinreachly.com:8000/v1',
+  llmBaseUrl: 'https://api.linkinreachly.com/v1',
   llmModel: 'grok-4.1-fast',
   llmEnabled: true,
   llmMode: 'bundled',
@@ -262,6 +262,15 @@ function migrateLegacyLlmToGrokDefaults(merged: AppSettings): boolean {
   return true
 }
 
+function isCleartextLinkinReachlyLlmDefault(url: string): boolean {
+  try {
+    const u = new URL(url)
+    return u.protocol === 'http:' && u.hostname === 'api.linkinreachly.com'
+  } catch {
+    return false
+  }
+}
+
 /** Merge disk values into defaults, accepting only matching primitive types. */
 function typedMerge(defaults: AppSettings, raw: Record<string, unknown>): AppSettings {
   const result = { ...defaults } as unknown as Record<string, unknown>
@@ -367,6 +376,12 @@ export function loadSettings(): AppSettings {
       baseUrlMigrated = true
     }
 
+    let cleartextLlmMigrated = false
+    if (isCleartextLinkinReachlyLlmDefault(merged.llmBaseUrl)) {
+      merged.llmBaseUrl = defaultSettings.llmBaseUrl
+      cleartextLlmMigrated = true
+    }
+
     let delayMigrated = false
     if (merged.delayBetweenRequestsMin === 120 && merged.delayBetweenRequestsMax === 300) {
       merged.delayBetweenRequestsMin = 45
@@ -379,6 +394,9 @@ export function loadSettings(): AppSettings {
     }
     if (baseUrlMigrated) {
       appLog.info('[settings] migration: appended /v1 to base URL', { baseUrl: merged.llmBaseUrl })
+    }
+    if (cleartextLlmMigrated) {
+      appLog.info('[settings] migration: upgraded bundled LLM endpoint to HTTPS', { baseUrl: merged.llmBaseUrl })
     }
     if (strippedLegacyOpenClaw) {
       appLog.info('[settings] migration: stripped legacy OpenClaw keys from settings')
@@ -406,7 +424,7 @@ export function loadSettings(): AppSettings {
       merged.llmMode = 'custom'
     }
 
-    if (grokMigrated || wroteMigration || strippedLegacyOpenClaw || baseUrlMigrated || devBridgePortMigrated) {
+    if (grokMigrated || wroteMigration || strippedLegacyOpenClaw || baseUrlMigrated || cleartextLlmMigrated || devBridgePortMigrated) {
       saveSettings(merged)
     }
 

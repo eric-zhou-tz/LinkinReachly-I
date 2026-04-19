@@ -491,6 +491,7 @@ function fieldType(el) {
   if (tag === 'input') {
     const inputType = String(el.getAttribute('type') || 'text').toLowerCase()
     if (inputType === 'hidden') return 'hidden'
+    if (inputType === 'password') return 'password'
     if (inputType === 'email' || inputType === 'tel' || inputType === 'number' || inputType === 'file' || inputType === 'checkbox' || inputType === 'radio') {
       return inputType
     }
@@ -2743,6 +2744,34 @@ function normalizeFormLabel(label) {
   return String(label || '').trim().toLowerCase().replace(/[*:?]/g, '').replace(/\s+/g, ' ').trim()
 }
 
+var SENSITIVE_FORM_MEMORY_PATTERN = /\b(password|passcode|pass phrase|secret|security answer|security question|ssn|social security|social-security|tax id|tin|national id|passport|driver'?s license|credit card|card number|cvv|cvc|bank account|routing number|pin|otp|one[-\s]?time|verification code|2fa|mfa)\b/i
+
+function fieldMemoryDescriptor(f) {
+  var el = f && f.element
+  var attrs = []
+  if (f && f.label) attrs.push(f.label)
+  if (f && f.type) attrs.push(f.type)
+  if (el) {
+    attrs.push(el.getAttribute && el.getAttribute('type'))
+    attrs.push(el.getAttribute && el.getAttribute('name'))
+    attrs.push(el.getAttribute && el.getAttribute('id'))
+    attrs.push(el.getAttribute && el.getAttribute('autocomplete'))
+    attrs.push(el.getAttribute && el.getAttribute('placeholder'))
+    attrs.push(el.getAttribute && el.getAttribute('aria-label'))
+  }
+  return attrs.filter(Boolean).join(' ')
+}
+
+function isSensitiveFormMemoryField(f) {
+  var type = String((f && f.type) || '').toLowerCase()
+  var el = f && f.element
+  var inputType = String((el && el.getAttribute && el.getAttribute('type')) || '').toLowerCase()
+  if (type === 'password' || inputType === 'password' || type === 'hidden' || inputType === 'hidden' || type === 'file' || inputType === 'file') {
+    return true
+  }
+  return SENSITIVE_FORM_MEMORY_PATTERN.test(fieldMemoryDescriptor(f))
+}
+
 function saveFormAnswers() {
   var root = findATSFormRoot()
   var fields = collectApplicationFields(root)
@@ -2752,6 +2781,7 @@ function saveFormAnswers() {
     var f = fields[i]
     var val = String(f.value || '').trim()
     if (!val || !f.label) continue
+    if (isSensitiveFormMemoryField(f)) continue
     var key = normalizeFormLabel(f.label)
     if (!key) continue
     entries[key] = { label: f.label, value: val, type: f.type || 'text', lastUsed: Date.now() }
@@ -2787,6 +2817,7 @@ var autoFillFromMemory = async function() {
       for (var i = 0; i < fields.length; i++) {
         var f = fields[i]
         if (f.value && String(f.value).trim()) continue
+        if (isSensitiveFormMemoryField(f)) continue
         var key = normalizeFormLabel(f.label)
         if (!key || !memory[key]) continue
         var el = f.element

@@ -19,6 +19,7 @@ import {
   composeMessageDetailed,
   detectJobIntent,
   extractFirstCompleteJsonObject,
+  isCleartextNonLoopbackLlmUrl,
   linkedInJobsSearchUrl,
   llmBatchJobMatchPercents,
   llmMatchSnapshotToProfile,
@@ -101,6 +102,15 @@ describe('extractFirstCompleteJsonObject', () => {
   it('returns null when no parseable object', () => {
     expect(extractFirstCompleteJsonObject('not json')).toBeNull()
     expect(extractFirstCompleteJsonObject('{broken')).toBeNull()
+  })
+})
+
+describe('isCleartextNonLoopbackLlmUrl', () => {
+  it('flags cleartext remote LLM endpoints while allowing HTTPS and loopback dev URLs', () => {
+    expect(isCleartextNonLoopbackLlmUrl('http://api.linkinreachly.com:8000/v1')).toBe(true)
+    expect(isCleartextNonLoopbackLlmUrl('https://api.linkinreachly.com/v1')).toBe(false)
+    expect(isCleartextNonLoopbackLlmUrl('http://127.0.0.1:8000/v1')).toBe(false)
+    expect(isCleartextNonLoopbackLlmUrl('http://localhost:8000/v1')).toBe(false)
   })
 })
 

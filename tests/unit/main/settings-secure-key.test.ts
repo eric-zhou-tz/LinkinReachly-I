@@ -67,11 +67,11 @@ describe('settings API key handling without safeStorage', () => {
     vi.resetModules()
     const { loadSettings } = await import('../../../src/main/settings')
     const s = loadSettings()
-    expect(s.llmBaseUrl).toBe('http://api.linkinreachly.com:8000/v1')
+    expect(s.llmBaseUrl).toBe('https://api.linkinreachly.com/v1')
     expect(s.llmModel).toBe('grok-4.1-fast')
     expect(s.llmProvider).toBe('grok')
     const saved = JSON.parse(readFileSync(join(cfg, 'settings.json'), 'utf8'))
-    expect(saved.llmBaseUrl).toBe('http://api.linkinreachly.com:8000/v1')
+    expect(saved.llmBaseUrl).toBe('https://api.linkinreachly.com/v1')
     expect(saved.llmModel).toBe('grok-4.1-fast')
     expect(saved.llmProvider).toBe('grok')
   })
@@ -98,5 +98,29 @@ describe('settings API key handling without safeStorage', () => {
     const saved = JSON.parse(readFileSync(join(cfg, 'settings.json'), 'utf8'))
     expect(saved.openclawEnabled).toBeUndefined()
     expect(saved.openclawBaseUrl).toBeUndefined()
+  })
+
+  it('migrates the old cleartext bundled LLM endpoint to HTTPS', async () => {
+    const base = process.env['LOA_USER_DATA_DIR']!
+    const cfg = join(base, 'config')
+    mkdirSync(cfg, { recursive: true })
+    writeFileSync(
+      join(cfg, 'settings.json'),
+      JSON.stringify({
+        llmBaseUrl: 'http://api.linkinreachly.com:8000/v1',
+        llmModel: 'grok-4.1-fast',
+        bridgePort: 19511,
+        templates: ['Hi {firstName}'],
+        mustInclude: [],
+        dailyCap: 20
+      }),
+      'utf8'
+    )
+    vi.resetModules()
+    const { loadSettings } = await import('../../../src/main/settings')
+    const s = loadSettings()
+    expect(s.llmBaseUrl).toBe('https://api.linkinreachly.com/v1')
+    const saved = JSON.parse(readFileSync(join(cfg, 'settings.json'), 'utf8'))
+    expect(saved.llmBaseUrl).toBe('https://api.linkinreachly.com/v1')
   })
 })

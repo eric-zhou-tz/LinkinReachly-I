@@ -5,7 +5,7 @@
 // ---------------------------------------------------------------------------
 
 import { app } from 'electron'
-import { enqueue, getAnonymousId, getSessionId, type TrackedEvent } from './event-queue'
+import { enqueue, getAnonymousId, getSessionId, setEventQueueEnabled, type TrackedEvent } from './event-queue'
 import { getFirebaseToken } from './auth-service'
 import { decodeTokenPayload } from './api-client'
 import { appLog } from './app-log'
@@ -26,6 +26,7 @@ let _telemetryEnabled = false
 
 export function setTelemetryEnabled(enabled: boolean): void {
   _telemetryEnabled = enabled
+  setEventQueueEnabled(enabled)
   appLog.info('[telemetry] opt-in status changed', { enabled })
 }
 
@@ -48,6 +49,8 @@ function getAppVersion(): string {
 // -- Core tracking ----------------------------------------------------------
 
 function track(event: string, properties: Record<string, unknown> = {}): void {
+  if (!_telemetryEnabled) return
+
   const tracked: TrackedEvent = {
     id: `${Date.now()}_${Math.random().toString(36).slice(2, 8)}`,
     event,
@@ -61,10 +64,7 @@ function track(event: string, properties: Record<string, unknown> = {}): void {
   }
 
   enqueue(tracked)
-
-  if (_telemetryEnabled) {
-    reportToSentry(tracked)
-  }
+  reportToSentry(tracked)
 }
 
 type SentryLike = { addBreadcrumb: (bc: Record<string, unknown>) => void }
@@ -241,6 +241,8 @@ export function trackError(
     context?: Record<string, unknown>
   }
 ): void {
+  if (!_telemetryEnabled) return
+
   const severity = opts?.severity ?? 'error'
 
   // 1. Track as telemetry event (local JSONL + server batch sync)
@@ -287,6 +289,8 @@ async function sendErrorToServer(
   stack?: string,
   context?: Record<string, unknown>
 ): Promise<void> {
+  if (!_telemetryEnabled) return
+
   try {
     const { getServiceConfig } = await import('./service-config')
     const { getAuthHeaders } = await import('./auth-service')

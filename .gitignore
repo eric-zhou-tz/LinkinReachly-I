@@ -3,6 +3,9 @@ out/
 release/
 .DS_Store
 *.log
+.env
+.env.local
+.env.*.local
 .secrets.local
 .env.signing
 certs/

@@ -227,6 +227,54 @@ describe('extension clickEasyApply draft handling', () => {
     expect(inputs[1]?.value).toBe('MBA')
   })
 
+  it('SAVE_FORM_ANSWERS skips sensitive values before writing form memory', async () => {
+    document.body.innerHTML = `
+      <div class="jobs-easy-apply-modal" style="width:400px;height:500px">
+        <div class="artdeco-form__group">
+          <label for="city">Current city</label>
+          <input id="city" type="text" value="Austin">
+        </div>
+        <div class="artdeco-form__group">
+          <label for="password">Password</label>
+          <input id="password" type="password" value="hunter2">
+        </div>
+        <div class="artdeco-form__group">
+          <label for="ssn">SSN</label>
+          <input id="ssn" type="text" value="123-45-6789">
+        </div>
+      </div>
+    `
+    const stored: { formMemory: Record<string, unknown> } = { formMemory: {} }
+    ;(globalThis as unknown as {
+      chrome: {
+        storage?: {
+          local: {
+            get: (key: string, cb: (value: { formMemory: Record<string, unknown> }) => void) => void
+            set: (value: { formMemory: Record<string, unknown> }, cb: () => void) => void
+          }
+        }
+      }
+    }).chrome.storage = {
+      local: {
+        get: vi.fn((_key, cb) => cb({ formMemory: stored.formMemory })),
+        set: vi.fn((value, cb) => {
+          stored.formMemory = value.formMemory
+          cb()
+        })
+      }
+    }
+
+    const hooks = (globalThis as unknown as { __loaContentTestHooks?: { ACTIONS: () => Record<string, () => Promise<{ ok: boolean; data?: { saved: number } }>> } })
+      .__loaContentTestHooks
+    const result = await hooks!.ACTIONS().SAVE_FORM_ANSWERS()
+
+    expect(result.ok).toBe(true)
+    expect(result.data?.saved).toBe(1)
+    expect(stored.formMemory).toHaveProperty('current city')
+    expect(JSON.stringify(stored.formMemory)).not.toContain('hunter2')
+    expect(JSON.stringify(stored.formMemory)).not.toContain('123-45-6789')
+  })
+
   it('GET_PAGE_TEXT returns normalized body text', async () => {
     document.body.innerHTML = `
       <main>

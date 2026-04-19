@@ -148,6 +148,20 @@ function shouldUseProxy(): boolean {
   return !!(config.llmProxy.url && isAuthenticated())
 }
 
+function isLoopbackHost(hostname: string): boolean {
+  const host = hostname.replace(/^\[|\]$/g, '').toLowerCase()
+  return host === 'localhost' || host === '127.0.0.1' || host === '::1'
+}
+
+export function isCleartextNonLoopbackLlmUrl(rawUrl: string): boolean {
+  try {
+    const url = new URL(rawUrl)
+    return url.protocol === 'http:' && !isLoopbackHost(url.hostname)
+  } catch {
+    return false
+  }
+}
+
 /**
  * Call our LLM proxy endpoint. The proxy holds the real API key server-side;
  * we authenticate with the Firebase ID token.
@@ -219,6 +233,9 @@ async function fetchChatCompletion(
 
   const maxTokens = Math.min(Math.max(options?.maxOutputTokens ?? 512, 1), 32_000)
   const timeoutMs = options?.timeoutMs ?? 30_000
+  if (isCleartextNonLoopbackLlmUrl(settings.llmBaseUrl)) {
+    throw new Error('Refusing to send LLM request over cleartext HTTP to a non-loopback host. Use HTTPS or a localhost endpoint.')
+  }
   const base = settings.llmBaseUrl.replace(/\/$/, '')
   const url = `${base}/chat/completions`
   const body: Record<string, unknown> = {

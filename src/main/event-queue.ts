@@ -45,6 +45,7 @@ let flushTimer: ReturnType<typeof setInterval> | null = null
 let flushing = false
 let _anonymousId: string | null = null
 let _sessionId: string = randomUUID()
+let _deliveryEnabled = false
 
 // -- Paths ------------------------------------------------------------------
 
@@ -60,6 +61,10 @@ function eventsFilePath(): string {
 
 function pendingFilePath(): string {
   return join(eventDir(), 'pending.jsonl')
+}
+
+function existingPendingFilePath(): string {
+  return join(userDataDir(), 'telemetry', 'pending.jsonl')
 }
 
 function anonymousIdPath(): string {
@@ -91,6 +96,14 @@ export function getSessionId(): string {
   return _sessionId
 }
 
+export function setEventQueueEnabled(enabled: boolean): void {
+  _deliveryEnabled = enabled
+  if (!enabled) {
+    queue.length = 0
+    clearPendingLog()
+  }
+}
+
 // -- Local persistence (crash-safe) -----------------------------------------
 
 function writeToLocalLog(event: TrackedEvent): void {
@@ -112,13 +125,16 @@ function writeToPendingLog(events: TrackedEvent[]): void {
 
 function clearPendingLog(): void {
   try {
-    writeFileSync(pendingFilePath(), '', 'utf8')
+    const path = existingPendingFilePath()
+    if (!existsSync(path)) return
+    writeFileSync(path, '', 'utf8')
   } catch { /* best effort */ }
 }
 
 // -- Enqueue ----------------------------------------------------------------
 
 export function enqueue(event: TrackedEvent): void {
+  if (!_deliveryEnabled) return
   writeToLocalLog(event)
   queue.push({ ...event, retries: 0 })
 
@@ -130,6 +146,7 @@ export function enqueue(event: TrackedEvent): void {
 // -- Flush ------------------------------------------------------------------
 
 async function flush(): Promise<void> {
+  if (!_deliveryEnabled) return
   if (flushing || queue.length === 0) return
   if (!isBackendConfigured()) return
 
@@ -192,6 +209,7 @@ async function sendBatch(events: TrackedEvent[]): Promise<boolean> {
 // -- Startup replay ---------------------------------------------------------
 
 export function replayPendingEvents(): void {
+  if (!_deliveryEnabled) return
   try {
     const path = pendingFilePath()
     if (!existsSync(path)) return
@@ -219,7 +237,7 @@ export function replayPendingEvents(): void {
 export function startEventQueue(): void {
   replayPendingEvents()
   flushTimer = setInterval(() => void flush(), FLUSH_INTERVAL)
-  appLog.info('[event-queue] started', { flushAt: FLUSH_AT, flushInterval: FLUSH_INTERVAL })
+  appLog.info('[event-queue] started', { flushAt: FLUSH_AT, flushInterval: FLUSH_INTERVAL, enabled: _deliveryEnabled })
 }
 
 export async function stopEventQueue(): Promise<void> {
@@ -228,7 +246,7 @@ export async function stopEventQueue(): Promise<void> {
     flushTimer = null
   }
   // Force flush remaining events
-  if (queue.length > 0) {
+  if (_deliveryEnabled && queue.length > 0) {
     flushing = false // Reset to allow final flush
     await flush()
   }

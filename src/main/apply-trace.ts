@@ -155,11 +155,8 @@ export function summarizeFormFieldsStep(
     type: f.type,
     required: !!f.required,
     hasValue: easyApplyFieldAppearsFilled(f),
-    valuePreview: easyApplyFieldAppearsFilled(f)
-      ? String(f.value ?? '')
-          .trim()
-          .slice(0, 40) + (String(f.value ?? '').trim().length > 40 ? '…' : '')
-      : '',
+    valuePreview: easyApplyFieldAppearsFilled(f) ? '[redacted]' : '',
+    valueLength: easyApplyFieldAppearsFilled(f) ? String(f.value ?? '').trim().length : 0,
     optionCount: f.options?.length ?? 0
   }))
   return {

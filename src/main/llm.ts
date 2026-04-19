@@ -17,6 +17,7 @@ export {
   extractErrorDetail,
   extractFirstCompleteJsonObject,
   extractLlmJsonContent,
+  isCleartextNonLoopbackLlmUrl,
   testApiKey,
   type LlmCallOptions,
   type LlmChatMessage

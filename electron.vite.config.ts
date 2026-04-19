@@ -6,7 +6,12 @@ import { loadEnv } from 'vite'
 export default defineConfig(({ mode }) => {
   const env = loadEnv(mode, resolve(__dirname), ['LR_', 'LINKINREACHLY_'])
   const define: Record<string, string> = {}
+  const runtimeOnlyEnv = new Set([
+    'LINKINREACHLY_API_KEY',
+    'LR_GOOGLE_OAUTH_CLIENT_SECRET'
+  ])
   for (const [key, value] of Object.entries(env)) {
+    if (runtimeOnlyEnv.has(key)) continue
     define[`process.env.${key}`] = JSON.stringify(value)
   }
   define['process.env.LINKINREACHLY_API_KEY'] ??= JSON.stringify('')

@@ -56,7 +56,7 @@ export async function googleSignInViaWindow(): Promise<
 
   const creds = await getGoogleOAuthCredentials(apiKey)
   if (!creds) {
-    return { ok: false, error: 'Google sign-in is not configured. Set LR_GOOGLE_OAUTH_CLIENT_ID and LR_GOOGLE_OAUTH_CLIENT_SECRET, or enable Google as a sign-in provider in the Firebase Console.' }
+    return { ok: false, error: 'Google sign-in is not configured. Set LR_GOOGLE_OAUTH_CLIENT_ID, or enable Google as a sign-in provider in the Firebase Console.' }
   }
   const { clientId, clientSecret } = creds
   const oauthState = randomUUID()
@@ -231,11 +231,11 @@ let _cachedCredentials: GoogleOAuthCredentials | null = null
 async function getGoogleOAuthCredentials(apiKey: string): Promise<GoogleOAuthCredentials | null> {
   if (_cachedCredentials) return _cachedCredentials
 
-  // 1. Check env vars first (recommended for Electron desktop apps)
+  // 1. Check env vars first. Desktop OAuth clients can use a client ID without bundling a secret.
   const envClientId = process.env.LR_GOOGLE_OAUTH_CLIENT_ID?.trim()
   const envClientSecret = process.env.LR_GOOGLE_OAUTH_CLIENT_SECRET?.trim()
-  if (envClientId && envClientSecret) {
-    _cachedCredentials = { clientId: envClientId, clientSecret: envClientSecret }
+  if (envClientId) {
+    _cachedCredentials = { clientId: envClientId, clientSecret: envClientSecret || '' }
     return _cachedCredentials
   }
 
